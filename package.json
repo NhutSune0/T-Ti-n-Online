@@ -1,0 +1,1 @@
+{"dependencies":{"ws":"^8.18.0"},"description":"Game tu tien online multiplayer - Node.js + WebSocket","engines":{"node":">=18"},"main":"server.js","name":"tu-tien-online","scripts":{"start":"node server.js"},"version":"1.0.0"}

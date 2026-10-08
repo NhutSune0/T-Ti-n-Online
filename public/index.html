@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tu Tiên Online</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="login">
+  <div class="login-box">
+    <h1>⚔ TU TIÊN ONLINE ⚔</h1>
+    <p>Thế giới tu tiên hắc ám — cùng chơi với mọi người theo thời gian thực</p>
+    <input id="name-input" maxlength="12" placeholder="Nhập đạo hiệu của bạn..." autocomplete="off">
+    <button id="join-btn">Nhập Thế Giới</button>
+    <div id="login-err"></div>
+    <p style="margin-top:14px;font-size:12px;color:#6f5b99">WASD / mũi tên: di chuyển &nbsp;•&nbsp; Chuột / J: đánh &nbsp;•&nbsp; 1-2-3: kỹ năng &nbsp;•&nbsp; F: qua cổng &nbsp;•&nbsp; Enter: chat</p>
+  </div>
+</div>
+
+<div id="hud">
+  <div id="topbar">
+    <div class="bar" id="hpbar"><div class="fill" style="width:100%"></div><span></span></div>
+    <div class="bar" id="manabar"><div class="fill" style="width:100%"></div><span></span></div>
+    <div class="bar" id="xpbar"><div class="fill" style="width:0%"></div><span></span></div>
+  </div>
+  <div id="lvl-badge">Lv 1</div>
+  <div id="gold-badge">💰 <span id="gold-n">0</span></div>
+  <canvas id="minimap" width="170" height="113"></canvas>
+  <div id="online"><b>🟢 <span id="online-n">0</span> đạo hữu online</b><div id="plist"></div></div>
+  <div id="skills">
+    <div class="skill" data-skill="1"><div class="ico">🗡️</div><div class="key">1 · Kiếm Khí</div><div class="cd"></div></div>
+    <div class="skill" data-skill="2"><div class="ico">⚡</div><div class="key">2 · Lôi Kích</div><div class="cd"></div></div>
+    <div class="skill" data-skill="3"><div class="ico">🔔</div><div class="key">3 · Kim Chung</div><div class="cd"></div></div>
+    <div class="skill" id="pot-hp"><div class="ico">🧪</div><div class="key">Q · <span id="pot-hp-n">0</span></div><div class="cd"></div></div>
+    <div class="skill" id="pot-mana"><div class="ico">🔷</div><div class="key">E · <span id="pot-mana-n">0</span></div><div class="cd"></div></div>
+  </div>
+  <div id="menubar">
+    <button data-panel="inv">🎒 Túi (I)</button>
+    <button data-panel="char">👤 Người (C)</button>
+    <button data-panel="shop">🏪 Shop (B)</button>
+    <button data-panel="rank">🏆 BXH (T)</button>
+    <button id="sound-toggle">🔊</button>
+  </div>
+  <div class="panel" id="panel-inv"><h3>🎒 Túi Đồ <span class="x" data-close>✕</span></h3><div id="inv-grid"></div><p class="hint">Bấm vào đồ để mặc · nút Bán để bán lấy linh thạch</p></div>
+  <div class="panel" id="panel-char"><h3>👤 Nhân Vật <span class="x" data-close>✕</span></h3><div id="char-stats"></div><div id="equip-slots"></div></div>
+  <div class="panel" id="panel-shop"><h3>🏪 Cửa Hàng <span class="x" data-close>✕</span></h3><div id="shop-items"></div></div>
+  <div class="panel" id="panel-rank"><h3>🏆 Bảng Xếp Hạng <span class="x" data-close>✕</span></h3><div id="rank-list"></div></div>
+  <div class="panel" id="panel-dialog">
+    <h3><span id="dlg-name"></span> <span class="x" data-close>✕</span></h3>
+    <div id="dlg-title" style="font-size:12px;color:#8f7bb8;margin:-8px 0 8px"></div>
+    <p id="dlg-text" style="font-size:13px;color:#d9ccff;line-height:1.5"></p>
+    <div id="dlg-quests" style="margin-top:10px"></div>
+  </div>
+  <div id="quest-tracker"><b>📜 Nhiệm vụ</b><div id="qt-list" style="margin-top:6px"></div></div>
+  <div id="story-modal">
+    <div class="story-box">
+      <h2>⚔️ TU TIÊN TRUYỀN KỲ ⚔️</h2>
+      <p id="story-text"></p>
+      <button id="story-btn">Bắt đầu tu tiên</button>
+    </div>
+  </div>
+  <div id="chatbox">
+    <div id="chatlog"></div>
+    <input id="chatinput" placeholder="Enter để chat..." autocomplete="off" maxlength="120">
+  </div>
+  <div id="banner"></div>
+  <div id="touch-ui">
+    <div id="joy"><div id="joy-knob"></div></div>
+    <button id="btn-atk">ĐÁNH</button>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
