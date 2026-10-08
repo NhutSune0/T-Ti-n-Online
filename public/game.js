@@ -16,6 +16,7 @@ let nearPortalIdx = -1;
 let NPCS = [], questList = [], questGivers = [], nearNpcId = null, dlgNpcId = null;
 let players = {}, monsters = {}, projectiles = [];
 let cam = { x: 0, y: 0 }, shake = 0;
+const ZOOM = 0.7; // Ti le camera kieu VLTK: nhin rong map, nhan vat nho gon
 let effects = [], dmgNums = [], floatTxts = [];
 let bossWarns = [];
 let keys = {}, mouse = { x: innerWidth / 2, y: innerHeight / 2 };
@@ -372,6 +373,19 @@ function togglePanel(id) {
 }
 document.querySelectorAll('[data-panel]').forEach(b => b.addEventListener('click', () => togglePanel(b.dataset.panel)));
 document.querySelectorAll('[data-close]').forEach(x => x.addEventListener('click', () => x.closest('.panel').classList.remove('open')));
+// Thu gon / mo panel online va nhiem vu cho gon giao dien
+document.getElementById('online-h').addEventListener('click', () => {
+  const pl = document.getElementById('plist');
+  const opening = pl.style.display === 'none';
+  pl.style.display = opening ? 'block' : 'none';
+  document.getElementById('online-arrow').textContent = opening ? '▾' : '▸';
+});
+document.getElementById('qt-h').addEventListener('click', () => {
+  const ql = document.getElementById('qt-list');
+  const opening = ql.style.display === 'none';
+  ql.style.display = opening ? 'block' : 'none';
+  document.getElementById('qt-arrow').textContent = opening ? '▾' : '▸';
+});
 function itemStat(it) { return it.slot === 'weapon' ? 'Công +' + it.atk : 'Máu +' + it.hp; }
 function renderInv() {
   const g = document.getElementById('inv-grid');
@@ -593,7 +607,7 @@ function drawFx() {
     } else if (e.kind === 'bolt' && e.t >= 0) {
       ctx.save(); ctx.globalAlpha = 1 - p; drawBolt(e.x, e.y, 420); ctx.restore();
     } else if (e.kind === 'flash') {
-      ctx.save(); ctx.globalAlpha = a * .35; ctx.fillStyle = '#d9b8ff'; ctx.fillRect(cam.x - innerWidth / 2, cam.y - innerHeight / 2, innerWidth, innerHeight); ctx.restore();
+      ctx.save(); ctx.globalAlpha = a * .35; ctx.fillStyle = '#d9b8ff'; ctx.fillRect(cam.x - innerWidth / 2 / ZOOM, cam.y - innerHeight / 2 / ZOOM, innerWidth / ZOOM, innerHeight / ZOOM); ctx.restore();
     } else if (e.kind === 'pillar') {
       ctx.save(); ctx.globalAlpha = a;
       const g = ctx.createLinearGradient(0, e.y - 420, 0, e.y);
@@ -772,8 +786,8 @@ function loop(now) {
     dx += joyVec.x; dy += joyVec.y;
     const m = Math.hypot(dx, dy);
     if (m > 1) { dx /= m; dy /= m; }
-    // Aim = huong chuot (twin-stick), mac dinh theo huong di
-    const wx = cam.x + (mouse.x - innerWidth / 2), wy = cam.y + (mouse.y - innerHeight / 2);
+    // Aim = huong chuot (twin-stick), mac dinh theo huong di (tinh theo ZOOM)
+    const wx = cam.x + (mouse.x - innerWidth / 2) / ZOOM, wy = cam.y + (mouse.y - innerHeight / 2) / ZOOM;
     if (Math.hypot(mouse.x - innerWidth / 2, mouse.y - innerHeight / 2) > 40) aimAngle = Math.atan2(wy - me.y, wx - me.x);
     else if (m > .1) aimAngle = Math.atan2(dy, dx);
     const SPEED = 250;
@@ -798,7 +812,7 @@ function loop(now) {
   const shx = (Math.random() - .5) * shake, shy = (Math.random() - .5) * shake;
 
   drawBackground(t);
-  ctx.save(); ctx.translate(-cam.x + innerWidth / 2 + shx, -cam.y + innerHeight / 2 + shy);
+  ctx.save(); ctx.translate(innerWidth / 2 + shx, innerHeight / 2 + shy); ctx.scale(ZOOM, ZOOM); ctx.translate(-cam.x, -cam.y);
   drawPortals(t);
   // Phat hien cong gan nhat
   nearPortalIdx = -1;
@@ -852,7 +866,7 @@ function loop(now) {
     ctx.beginPath(); ctx.arc(w.x, w.y, Math.max(6, w.r * left), 0, 7); ctx.stroke();
     ctx.restore();
   }
-  const view = { x0: cam.x - innerWidth / 2 - 200, x1: cam.x + innerWidth / 2 + 200, y0: cam.y - innerHeight / 2 - 200, y1: cam.y + innerHeight / 2 + 200 };
+  const view = { x0: cam.x - innerWidth / 2 / ZOOM - 200, x1: cam.x + innerWidth / 2 / ZOOM + 200, y0: cam.y - innerHeight / 2 / ZOOM - 200, y1: cam.y + innerHeight / 2 / ZOOM + 200 };
   for (const id in monsters) { const m = monsters[id]; if (m.x > view.x0 && m.x < view.x1 && m.y > view.y0 && m.y < view.y1) drawMonster(m, t); }
   const order = Object.values(players).sort((a, b) => a.y - b.y);
   for (const p of order) drawPlayer(p, t);
